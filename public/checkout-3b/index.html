@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Checkout Seguro</title>
+<meta name="description" content="Finaliza tu compra de forma segura." />
+
+<link rel="preconnect" href="https://js.stripe.com" />
+<link rel="preconnect" href="https://api.stripe.com" />
+<link rel="preconnect" href="https://idyeyanieitpeysobbgf.supabase.co" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --card: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: #e5e7eb;
+    --brand: #fe2c55;
+    --brand-dark: #d81c46;
+    --accent: #25f4ee;
+    --success: #10b981;
+    --danger: #ef4444;
+    --radius: 14px;
+    --shadow: 0 6px 24px rgba(15,23,42,.06);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.5;
+  }
+  .topbar {
+    background: #0f172a;
+    color: #fff;
+    text-align: center;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: .2px;
+  }
+  .topbar svg { vertical-align: -3px; margin-right: 6px; }
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  @media (min-width: 900px) {
+    .wrap { grid-template-columns: 1.15fr .85fr; padding-top: 40px; }
+    .summary { order: 2; position: sticky; top: 24px; align-self: start; }
+  }
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px;
+    border: 1px solid var(--border);
+  }
+  .brand {
+    display:flex; align-items:center; gap:10px;
+    font-weight: 800; font-size: 18px; margin-bottom: 18px;
+  }
+  .brand .dot { width:28px; height:28px; border-radius:8px; background: var(--brand); display:inline-flex; align-items:center; justify-content:center; color:#fff; font-weight:800; }
+  h1 { font-size: 20px; margin: 0 0 4px; font-weight: 700; }
+  h2 { font-size: 15px; margin: 20px 0 10px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .6px; }
+  p.sub { margin: 0 0 20px; color: var(--muted); font-size: 14px; }
+
+  .field { margin-bottom: 14px; }
+  .field label { display:block; font-size: 13px; font-weight: 500; margin-bottom: 6px; color: #334155; }
+  .field input {
+    width: 100%; padding: 12px 14px; font-size: 15px;
+    border: 1px solid var(--border); border-radius: 10px; background: #fff;
+    font-family: inherit; color: var(--text); transition: border .15s, box-shadow .15s;
+  }
+  .field input:focus { outline: none; border-color: var(--brand); box-shadow: 0 0 0 3px rgba(254,44,85,.12); }
+  .field .err { color: var(--danger); font-size: 12px; margin-top: 4px; display:none; }
+  .field.invalid .err { display:block; }
+  .field.invalid input { border-color: var(--danger); }
+
+  #express-checkout { margin-bottom: 16px; min-height: 0; }
+  .divider { display:flex; align-items:center; gap:10px; color: var(--muted); font-size: 12px; margin: 14px 0; text-transform: uppercase; letter-spacing: .8px; }
+  .divider::before, .divider::after { content:''; flex:1; height:1px; background: var(--border); }
+
+  #payment-element { min-height: 60px; }
+
+  .pay-btn {
+    width: 100%; margin-top: 18px; padding: 15px 18px;
+    background: var(--brand); color: #fff; border: none; border-radius: 12px;
+    font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    transition: background .15s, transform .05s;
+  }
+  .pay-btn:hover:not(:disabled) { background: var(--brand-dark); }
+  .pay-btn:active:not(:disabled) { transform: translateY(1px); }
+  .pay-btn:disabled { opacity: .65; cursor: not-allowed; }
+  .spinner { width:18px; height:18px; border:2px solid rgba(255,255,255,.35); border-top-color:#fff; border-radius:50%; animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .alert { padding: 12px 14px; border-radius: 10px; font-size: 14px; margin-top: 12px; display:none; }
+  .alert.error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+  .alert.show { display:block; }
+
+  .trust { display:flex; gap:14px; align-items:center; justify-content:center; margin-top: 16px; color: var(--muted); font-size: 12px; }
+  .trust svg { vertical-align: -3px; }
+
+  /* Summary */
+  .prod { display:flex; gap:14px; align-items:flex-start; }
+  .prod img { width: 72px; height: 72px; object-fit: cover; border-radius: 10px; border:1px solid var(--border); background:#f1f5f9; flex-shrink:0; }
+  .prod .info h3 { margin:0 0 4px; font-size: 15px; font-weight: 600; }
+  .prod .info p { margin:0; font-size: 13px; color: var(--muted); }
+  .rows { margin-top: 18px; border-top: 1px solid var(--border); padding-top: 14px; }
+  .row { display:flex; justify-content:space-between; font-size: 14px; padding: 4px 0; color: #334155; }
+  .row.total { font-size: 18px; font-weight: 700; color: var(--text); border-top: 1px solid var(--border); margin-top: 10px; padding-top: 12px; }
+
+  .skeleton { background: linear-gradient(90deg,#eef2f7 0%,#f8fafc 50%,#eef2f7 100%); background-size: 200% 100%; animation: sk 1.2s ease-in-out infinite; border-radius: 8px; }
+  @keyframes sk { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
+  .sk-line { height: 14px; margin: 8px 0; }
+  .hidden { display:none !important; }
+
+  .powered { text-align:center; margin-top: 20px; color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+  Pago 100% seguro · Cifrado SSL
+</div>
+
+<div class="wrap">
+
+  <!-- FORM -->
+  <div class="card">
+    <div class="brand">
+      <span class="dot">✦</span>
+      <span id="store-name">Checkout</span>
+    </div>
+
+    <h1>Finaliza tu compra</h1>
+    <p class="sub">Introduce tus datos y paga de forma segura.</p>
+
+    <h2>Contacto</h2>
+    <div class="field" id="f-email">
+      <label for="email">Correo electrónico</label>
+      <input type="email" id="email" name="email" autocomplete="email" placeholder="tu@email.com" required />
+      <div class="err">Introduce un correo válido.</div>
+    </div>
+    <div class="field" id="f-name">
+      <label for="fullName">Nombre completo</label>
+      <input type="text" id="fullName" name="fullName" autocomplete="name" placeholder="Nombre y apellidos" required />
+      <div class="err">Introduce tu nombre.</div>
+    </div>
+
+    <h2>Pago</h2>
+
+    <div id="express-checkout"></div>
+    <div class="divider" id="or-divider" style="display:none;">o paga con tarjeta</div>
+
+    <div id="payment-element">
+      <div class="skeleton sk-line" style="width:100%; height:44px;"></div>
+      <div class="skeleton sk-line" style="width:60%;"></div>
+    </div>
+
+    <div id="alert" class="alert error"></div>
+
+    <button type="button" id="pay-btn" class="pay-btn" disabled>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <span id="pay-btn-text">Pagar ahora</span>
+    </button>
+
+    <div class="trust">
+      <span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Compra protegida</span>
+      <span>·</span>
+      <span>Powered by Stripe</span>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="card summary">
+    <h2 style="margin-top:0;">Tu pedido</h2>
+    <div class="prod" id="prod">
+      <div class="skeleton" style="width:72px;height:72px;"></div>
+      <div class="info" style="flex:1;">
+        <div class="skeleton sk-line" style="width:70%;"></div>
+        <div class="skeleton sk-line" style="width:50%;"></div>
+      </div>
+    </div>
+    <div class="rows">
+      <div class="row"><span>Subtotal</span><span id="subtotal">—</span></div>
+      <div class="row total"><span>Total</span><span id="total">—</span></div>
+    </div>
+    <div class="powered">Pago procesado por 3B Pagamentos + Stripe</div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var API_BASE = 'https://idyeyanieitpeysobbgf.supabase.co/functions/v1';
+  var API_KEY = '3bpk_live_d43981a56aa6419fa52182cad7019e074625ff7fcb3a403bbbe99a70dff842fc';
+  var PRODUCT_ID = '7d4908c6-f31c-44b8-9b06-dfbca8817c0e';
+
+  var stripe, elements, paymentElement, expressElement;
+  var product = null, currency = 'eur', amount = 0;
+
+  var $ = function(id){ return document.getElementById(id); };
+  var alertEl = $('alert');
+  var payBtn = $('pay-btn');
+  var payBtnText = $('pay-btn-text');
+  var emailInput = $('email');
+  var nameInput = $('fullName');
+
+  function showError(msg){ alertEl.textContent = msg; alertEl.classList.add('show'); }
+  function clearError(){ alertEl.classList.remove('show'); alertEl.textContent = ''; }
+
+  function formatMoney(cents, cur){
+    try {
+      return new Intl.NumberFormat('es-ES', { style:'currency', currency: (cur||'EUR').toUpperCase() }).format((cents||0)/100);
+    } catch(e){ return ((cents||0)/100).toFixed(2) + ' ' + (cur||'EUR').toUpperCase(); }
+  }
+
+  function setLoading(loading){
+    payBtn.disabled = loading;
+    if (loading) {
+      payBtnText.textContent = 'Procesando...';
+      var s = document.createElement('span'); s.className='spinner'; s.id='btn-spin';
+      payBtn.appendChild(s);
+    } else {
+      payBtnText.textContent = 'Pagar ' + formatMoney(amount, currency);
+      var s = document.getElementById('btn-spin'); if (s) s.remove();
+    }
+  }
+
+  function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v||''); }
+  function validateForm(){
+    var ok = true;
+    if (!validEmail(emailInput.value.trim())) { $('f-email').classList.add('invalid'); ok=false; } else $('f-email').classList.remove('invalid');
+    if (!nameInput.value.trim()) { $('f-name').classList.add('invalid'); ok=false; } else $('f-name').classList.remove('invalid');
+    return ok;
+  }
+  emailInput.addEventListener('input', function(){ if ($('f-email').classList.contains('invalid')) validateForm(); });
+  nameInput.addEventListener('input', function(){ if ($('f-name').classList.contains('invalid')) validateForm(); });
+
+  // Step 1: fetch product + mount elements
+  function init(){
+    fetch(API_BASE + '/get-checkout-config?apiKey=' + encodeURIComponent(API_KEY) + '&productId=' + encodeURIComponent(PRODUCT_ID))
+      .then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error(j.error||'Error cargando producto'); return j; }); })
+      .then(function(cfg){
+        if (!cfg.publishableKey || !cfg.product) throw new Error('Configuración inválida');
+        product = cfg.product;
+        amount = product.priceCents;
+        currency = (product.currency || 'EUR').toLowerCase();
+
+        // Store name
+        if (cfg.store && cfg.store.name) {
+          document.getElementById('store-name').textContent = cfg.store.name;
+          document.title = 'Checkout · ' + cfg.store.name;
+        }
+
+        // Summary render
+        var prod = $('prod');
+        prod.innerHTML = '';
+        var img = document.createElement('img');
+        img.src = product.imageUrl || 'data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'72\' height=\'72\'><rect width=\'72\' height=\'72\' fill=\'%23f1f5f9\'/><text x=\'50%25\' y=\'55%25\' font-size=\'28\' text-anchor=\'middle\' fill=\'%2394a3b8\'>✦</text></svg>';
+        img.alt = product.name || 'Producto';
+        img.onerror = function(){ this.src = 'data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'72\' height=\'72\'><rect width=\'72\' height=\'72\' fill=\'%23f1f5f9\'/></svg>'; };
+        var info = document.createElement('div'); info.className='info';
+        var h3 = document.createElement('h3'); h3.textContent = product.name || 'Producto';
+        var desc = document.createElement('p'); desc.textContent = product.description || '';
+        info.appendChild(h3); if (product.description) info.appendChild(desc);
+        prod.appendChild(img); prod.appendChild(info);
+
+        $('subtotal').textContent = formatMoney(amount, currency);
+        $('total').textContent = formatMoney(amount, currency);
+        payBtnText.textContent = 'Pagar ' + formatMoney(amount, currency);
+
+        // Stripe
+        stripe = Stripe(cfg.publishableKey);
+        elements = stripe.elements({
+          mode: 'payment',
+          amount: amount,
+          currency: currency,
+          appearance: {
+            theme: 'stripe',
+            variables: {
+              colorPrimary: '#fe2c55',
+              colorText: '#0f172a',
+              colorBackground: '#ffffff',
+              colorDanger: '#ef4444',
+              fontFamily: 'Inter, system-ui, sans-serif',
+              borderRadius: '10px',
+              spacingUnit: '4px'
+            }
+          }
+        });
+
+        // Express checkout (Apple/Google Pay) — mount above card
+        try {
+          expressElement = elements.create('expressCheckout');
+          expressElement.mount('#express-checkout');
+          expressElement.on('ready', function(e){
+            if (e && e.availablePaymentMethods) {
+              $('or-divider').style.display = 'flex';
+            }
+          });
+          expressElement.on('confirm', handleExpressConfirm);
+        } catch(e){ console.warn('Express checkout no disponible', e); }
+
+        // Payment element (deferred mode)
+        $('payment-element').innerHTML = '';
+        paymentElement = elements.create('payment', {
+          terms: { card: 'never' },
+          fields: { billingDetails: { email: 'never' } }
+        });
+        paymentElement.mount('#payment-element');
+        paymentElement.on('ready', function(){ payBtn.disabled = false; });
+      })
+      .catch(function(err){
+        console.error(err);
+        showError(err.message || 'No se pudo cargar el checkout.');
+      });
+  }
+
+  // Create PI and confirm
+  function createPI(buyerEmail){
+    return fetch(API_BASE + '/create-payment-intent', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ apiKey: API_KEY, productId: PRODUCT_ID, quantity: 1, buyerEmail: buyerEmail })
+    }).then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error(j.error||'Error creando pago'); return j; }); });
+  }
+
+  function returnUrl(paymentIntentId){
+    return window.location.origin + '/obrigado?payment_intent=' + encodeURIComponent(paymentIntentId);
+  }
+
+  function handlePay(){
+    clearError();
+    if (!validateForm()) return;
+    if (!stripe || !elements) return;
+
+    setLoading(true);
+    var buyerEmail = emailInput.value.trim();
+    var buyerName = nameInput.value.trim();
+
+    elements.submit().then(function(res){
+      if (res && res.error) throw res.error;
+      return createPI(buyerEmail);
+    }).then(function(pi){
+      return stripe.confirmPayment({
+        elements: elements,
+        clientSecret: pi.clientSecret,
+        confirmParams: {
+          return_url: returnUrl(pi.paymentIntentId),
+          payment_method_data: {
+            billing_details: { email: buyerEmail, name: buyerName }
+          }
+        }
+      });
+    }).then(function(result){
+      if (result && result.error) throw result.error;
+      // redirection typically happens automatically
+    }).catch(function(err){
+      console.error(err);
+      showError(err.message || 'No se pudo procesar el pago.');
+      setLoading(false);
+    });
+  }
+
+  function handleExpressConfirm(){
+    clearError();
+    var buyerEmail = emailInput.value.trim();
+    if (!validEmail(buyerEmail)) {
+      $('f-email').classList.add('invalid');
+      showError('Introduce tu correo electrónico antes de continuar.');
+      if (expressElement && expressElement.confirm) { /* stripe will show error via failure */ }
+      return;
+    }
+    elements.submit().then(function(res){
+      if (res && res.error) throw res.error;
+      return createPI(buyerEmail);
+    }).then(function(pi){
+      return stripe.confirmPayment({
+        elements: elements,
+        clientSecret: pi.clientSecret,
+        confirmParams: {
+          return_url: returnUrl(pi.paymentIntentId),
+          payment_method_data: { billing_details: { email: buyerEmail, name: nameInput.value.trim() } }
+        }
+      });
+    }).catch(function(err){
+      console.error(err);
+      showError(err.message || 'No se pudo procesar el pago.');
+    });
+  }
+
+  payBtn.addEventListener('click', handlePay);
+
+  init();
+})();
+</script>
+</body>
+</html>
