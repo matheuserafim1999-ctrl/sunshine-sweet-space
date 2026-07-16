@@ -440,6 +440,27 @@
   payBtn.addEventListener('click', handlePay);
 
   init();
+
+  // Reporta a altura real ao pai (elimina espaço em branco no iframe embed)
+  (function(){
+    if (window.parent === window) return;
+    var last = 0;
+    function send(){
+      var h = Math.max(
+        document.documentElement.scrollHeight,
+        document.body ? document.body.scrollHeight : 0
+      );
+      if (h && Math.abs(h - last) > 2) {
+        last = h;
+        try { window.parent.postMessage({ type: 'checkout-3b:resize', height: h }, '*'); } catch(e){}
+      }
+    }
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(send).observe(document.documentElement);
+    }
+    window.addEventListener('load', send);
+    setInterval(send, 500);
+  })();
 })();
 </script>
 </body>
