@@ -2,6 +2,13 @@
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
         <meta http-equiv="Pragma" content="no-cache">
         <meta http-equiv="Expires" content="0">
+
+        <!-- Pré-aquece o checkout 3B para abrir instantâneo -->
+        <link rel="preconnect" href="https://js.stripe.com" crossorigin>
+        <link rel="preconnect" href="https://api.stripe.com" crossorigin>
+        <link rel="preconnect" href="https://idyeyanieitpeysobbgf.supabase.co" crossorigin>
+        <link rel="prefetch" href="/checkout-3b/index.html?embed=1" as="document">
+        
         
         <script>
         !function (w, d, t) {
