@@ -6,14 +6,22 @@
 <title>Checkout Seguro</title>
 <meta name="description" content="Finaliza tu compra de forma segura." />
 
-<link rel="preconnect" href="https://js.stripe.com" />
-<link rel="preconnect" href="https://api.stripe.com" />
-<link rel="preconnect" href="https://idyeyanieitpeysobbgf.supabase.co" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="preconnect" href="https://js.stripe.com" crossorigin />
+<link rel="preconnect" href="https://api.stripe.com" crossorigin />
+<link rel="preconnect" href="https://idyeyanieitpeysobbgf.supabase.co" crossorigin />
+<link rel="dns-prefetch" href="https://m.stripe.network" />
 
-<script src="https://js.stripe.com/v3/"></script>
+<script async src="https://js.stripe.com/v3/"></script>
+<script>
+  // Dispara a busca da config o mais cedo possível, em paralelo com o parse do HTML e o download do Stripe.js.
+  (function(){
+    var API = "https://idyeyanieitpeysobbgf.supabase.co/functions/v1";
+    var KEY = "3bpk_live_d43981a56aa6419fa52182cad7019e074625ff7fcb3a403bbbe99a70dff842fc";
+    var PID = "7d4908c6-f31c-44b8-9b06-dfbca8817c0e";
+    window.__CFG_PROMISE__ = fetch(API + "/get-checkout-config?apiKey=" + encodeURIComponent(KEY) + "&productId=" + encodeURIComponent(PID))
+      .then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error(j.error||'Error cargando producto'); return j; }); });
+  })();
+</script>
 
 <style>
   :root {
@@ -33,7 +41,7 @@
   * { box-sizing: border-box; }
   html, body { margin:0; padding:0; }
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     background: var(--bg);
     color: var(--text);
     -webkit-font-smoothing: antialiased;
@@ -193,11 +201,6 @@
       <span id="pay-btn-text">Pagar ahora</span>
     </button>
 
-    <div class="trust">
-      <span><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Compra protegida</span>
-      <span>·</span>
-      <span>Powered by Stripe</span>
-    </div>
   </div>
 
   <!-- SUMMARY -->
@@ -276,9 +279,15 @@
   nameInput.addEventListener('input', function(){ if ($('f-name').classList.contains('invalid')) validateForm(); });
 
   // Step 1: fetch product + mount elements
+  function waitForStripe(){
+    return new Promise(function(resolve){
+      if (window.Stripe) return resolve();
+      var i = setInterval(function(){ if (window.Stripe){ clearInterval(i); resolve(); } }, 30);
+    });
+  }
   function init(){
-    fetch(API_BASE + '/get-checkout-config?apiKey=' + encodeURIComponent(API_KEY) + '&productId=' + encodeURIComponent(PRODUCT_ID))
-      .then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error(j.error||'Error cargando producto'); return j; }); })
+    Promise.all([ window.__CFG_PROMISE__, waitForStripe() ])
+      .then(function(arr){ return arr[0]; })
       .then(function(cfg){
         if (!cfg.publishableKey || !cfg.product) throw new Error('Configuración inválida');
         product = cfg.product;
@@ -321,7 +330,7 @@
               colorText: '#0f172a',
               colorBackground: '#ffffff',
               colorDanger: '#ef4444',
-              fontFamily: 'Inter, system-ui, sans-serif',
+              fontFamily: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif',
               borderRadius: '10px',
               spacingUnit: '4px'
             }
