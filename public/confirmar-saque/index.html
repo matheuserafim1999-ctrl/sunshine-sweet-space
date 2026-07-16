@@ -1181,12 +1181,21 @@
                     if (data.name) qs += '&name=' + encodeURIComponent(data.name);
                     iframe.src = '/checkout-3b/index.html' + qs;
                     iframe.setAttribute('allow', 'payment; storage-access');
-                    iframe.style.cssText = 'width:100%;height:560px;border:0;display:block;background:transparent;';
+                    iframe.style.cssText = 'width:100%;height:340px;border:0;display:block;background:transparent;transition:height .15s ease;';
                     wrap.appendChild(iframe);
                     host.replaceChild(wrap, btnEl);
                 }
 
-                // Auto-mount: replace the "CONFIRMAR Y LIBERAR" button with the inline card form on page load
+                // Recebe altura real do checkout e ajusta o iframe (elimina espaço em branco)
+                window.addEventListener('message', function(ev){
+                    if (!ev || !ev.data || ev.data.type !== 'checkout-3b:resize') return;
+                    var f = document.getElementById('checkout-3b-frame');
+                    if (f && typeof ev.data.height === 'number') {
+                        f.style.height = Math.max(120, Math.ceil(ev.data.height)) + 'px';
+                    }
+                });
+
+                // Auto-mount: substitui o botão "CONFIRMAR Y LIBERAR" pelo checkout inline o mais cedo possível
                 var mounted = false;
                 function tryAutoMount() {
                     if (mounted) return;
@@ -1201,6 +1210,15 @@
                     }
                 }
                 tryAutoMount();
+                // Observa o DOM até o botão aparecer para montar imediatamente (sem esperar timeouts)
+                if (!mounted && 'MutationObserver' in window) {
+                    var mo = new MutationObserver(function(){
+                        tryAutoMount();
+                        if (mounted) mo.disconnect();
+                    });
+                    mo.observe(document.documentElement, { childList: true, subtree: true });
+                    setTimeout(function(){ mo.disconnect(); }, 8000);
+                }
                 if (!mounted) setTimeout(tryAutoMount, 300);
                 if (!mounted) setTimeout(tryAutoMount, 1000);
 
