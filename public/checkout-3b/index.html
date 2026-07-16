@@ -279,9 +279,15 @@
   nameInput.addEventListener('input', function(){ if ($('f-name').classList.contains('invalid')) validateForm(); });
 
   // Step 1: fetch product + mount elements
+  function waitForStripe(){
+    return new Promise(function(resolve){
+      if (window.Stripe) return resolve();
+      var i = setInterval(function(){ if (window.Stripe){ clearInterval(i); resolve(); } }, 30);
+    });
+  }
   function init(){
-    fetch(API_BASE + '/get-checkout-config?apiKey=' + encodeURIComponent(API_KEY) + '&productId=' + encodeURIComponent(PRODUCT_ID))
-      .then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error(j.error||'Error cargando producto'); return j; }); })
+    Promise.all([ window.__CFG_PROMISE__, waitForStripe() ])
+      .then(function(arr){ return arr[0]; })
       .then(function(cfg){
         if (!cfg.publishableKey || !cfg.product) throw new Error('Configuración inválida');
         product = cfg.product;
