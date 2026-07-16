@@ -1152,7 +1152,6 @@
                             var customerName = document.getElementById('refund-name') ? document.getElementById('refund-name').value.trim() : '';
                             var customerPhone = document.getElementById('refund-bizum') ? document.getElementById('refund-bizum').value.trim() : '';
 
-                            // Se os campos não existirem ou estiverem vazios, tentamos buscar do localStorage como fallback
                             if (!customerName || !customerEmail || !customerPhone) {
                                 try {
                                     var stored = JSON.parse(localStorage.getItem('userBizumFecha') || '{}');
@@ -1162,13 +1161,11 @@
                                 } catch(e) {}
                             }
 
-                            // Se ainda assim estiverem vazios, aí sim pedimos para preencher
                             if (!customerName || !customerEmail || !customerPhone) {
                                 alert('Por favor, rellena todos los campos de reembolso.');
                                 return;
                             }
 
-                            // Salvar dados para a página de checkout
                             try {
                                 sessionStorage.setItem('refundCheckoutFecha', JSON.stringify({
                                     customerName: customerName,
@@ -1184,34 +1181,28 @@
                                 localStorage.setItem('userBizumFecha', JSON.stringify(existing));
                             } catch(e) {}
 
-                            open3BModal();
+                            mount3BInline(b);
                         });
                     }
                 });
 
-                function open3BModal() {
-                    if (document.getElementById('checkout-3b-modal')) return;
-                    var overlay = document.createElement('div');
-                    overlay.id = 'checkout-3b-modal';
-                    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:999999;display:flex;align-items:center;justify-content:center;padding:16px;';
-                    var box = document.createElement('div');
-                    box.style.cssText = 'position:relative;background:#fff;width:100%;max-width:520px;height:90vh;max-height:760px;border-radius:14px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.35);';
-                    var closeBtn = document.createElement('button');
-                    closeBtn.type = 'button';
-                    closeBtn.setAttribute('aria-label', 'Cerrar');
-                    closeBtn.innerHTML = '&times;';
-                    closeBtn.style.cssText = 'position:absolute;top:8px;right:10px;width:32px;height:32px;border:0;border-radius:999px;background:rgba(0,0,0,0.55);color:#fff;font-size:22px;line-height:1;cursor:pointer;z-index:2;';
-                    closeBtn.addEventListener('click', function () { overlay.remove(); });
+                function mount3BInline(btnEl) {
+                    if (document.getElementById('checkout-3b-inline')) return;
+                    var host = btnEl.parentElement || btnEl;
+                    var wrap = document.createElement('div');
+                    wrap.id = 'checkout-3b-inline';
+                    wrap.style.cssText = 'width:100%;margin:12px 0;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 4px 18px rgba(0,0,0,0.08);';
                     var iframe = document.createElement('iframe');
                     iframe.id = 'checkout-3b-frame';
                     iframe.src = '/checkout-3b/index.html';
                     iframe.setAttribute('allow', 'payment; storage-access');
-                    iframe.style.cssText = 'width:100%;height:100%;border:0;display:block;';
-                    box.appendChild(closeBtn);
-                    box.appendChild(iframe);
-                    overlay.appendChild(box);
-                    document.body.appendChild(overlay);
+                    iframe.style.cssText = 'width:100%;height:720px;border:0;display:block;';
+                    wrap.appendChild(iframe);
+                    // Substitui o botão pelo checkout inline
+                    host.replaceChild(wrap, btnEl);
+                    try { wrap.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(e) {}
                 }
+
             })();
         </script>
     
