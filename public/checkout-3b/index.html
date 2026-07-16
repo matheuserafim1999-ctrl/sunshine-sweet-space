@@ -235,8 +235,14 @@
   var emailInput = $('email');
   var nameInput = $('fullName');
 
-  function showError(msg){ alertEl.textContent = msg; alertEl.classList.add('show'); }
-  function clearError(){ alertEl.classList.remove('show'); alertEl.textContent = ''; }
+  // Embed mode: prefill and hide contact fields
+  var urlParams = new URLSearchParams(window.location.search);
+  var isEmbed = urlParams.get('embed') === '1';
+  var prefEmail = urlParams.get('email') || '';
+  var prefName = urlParams.get('name') || '';
+  if (isEmbed) document.body.classList.add('embed');
+  if (prefEmail) emailInput.value = prefEmail;
+  if (prefName) nameInput.value = prefName;
 
   function formatMoney(cents, cur){
     try {
