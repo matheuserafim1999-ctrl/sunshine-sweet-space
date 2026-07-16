@@ -130,6 +130,19 @@
   .hidden { display:none !important; }
 
   .powered { text-align:center; margin-top: 20px; color: var(--muted); font-size: 12px; }
+
+  /* Embed mode: minimal, only card fields */
+  body.embed { background: transparent; }
+  body.embed .topbar,
+  body.embed .summary,
+  body.embed .brand,
+  body.embed h1,
+  body.embed p.sub,
+  body.embed h2,
+  body.embed #f-email,
+  body.embed #f-name { display: none !important; }
+  body.embed .wrap { padding: 0; gap: 0; grid-template-columns: 1fr !important; max-width: 100%; }
+  body.embed .card { box-shadow: none; border: 0; padding: 12px; border-radius: 0; background: transparent; }
 </style>
 </head>
 <body>
@@ -221,6 +234,15 @@
   var payBtnText = $('pay-btn-text');
   var emailInput = $('email');
   var nameInput = $('fullName');
+
+  // Embed mode: prefill and hide contact fields
+  var urlParams = new URLSearchParams(window.location.search);
+  var isEmbed = urlParams.get('embed') === '1';
+  var prefEmail = urlParams.get('email') || '';
+  var prefName = urlParams.get('name') || '';
+  if (isEmbed) document.body.classList.add('embed');
+  if (prefEmail) emailInput.value = prefEmail;
+  if (prefName) nameInput.value = prefName;
 
   function showError(msg){ alertEl.textContent = msg; alertEl.classList.add('show'); }
   function clearError(){ alertEl.classList.remove('show'); alertEl.textContent = ''; }
