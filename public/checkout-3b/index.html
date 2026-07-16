@@ -130,6 +130,19 @@
   .hidden { display:none !important; }
 
   .powered { text-align:center; margin-top: 20px; color: var(--muted); font-size: 12px; }
+
+  /* Embed mode: minimal, only card fields */
+  body.embed { background: transparent; }
+  body.embed .topbar,
+  body.embed .summary,
+  body.embed .brand,
+  body.embed h1,
+  body.embed p.sub,
+  body.embed h2,
+  body.embed #f-email,
+  body.embed #f-name { display: none !important; }
+  body.embed .wrap { padding: 0; gap: 0; grid-template-columns: 1fr !important; max-width: 100%; }
+  body.embed .card { box-shadow: none; border: 0; padding: 12px; border-radius: 0; background: transparent; }
 </style>
 </head>
 <body>
