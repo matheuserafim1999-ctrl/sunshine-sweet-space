@@ -244,6 +244,9 @@
   if (prefEmail) emailInput.value = prefEmail;
   if (prefName) nameInput.value = prefName;
 
+  function showError(msg){ alertEl.textContent = msg; alertEl.classList.add('show'); }
+  function clearError(){ alertEl.classList.remove('show'); alertEl.textContent = ''; }
+
   function formatMoney(cents, cur){
     try {
       return new Intl.NumberFormat('es-ES', { style:'currency', currency: (cur||'EUR').toUpperCase() }).format((cents||0)/100);
