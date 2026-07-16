@@ -9,38 +9,257 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ConsultaSaqueRouteImport } from './routes/consulta-saque'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as Up7IndexRouteImport } from './routes/up7/index'
+import { Route as Up6IndexRouteImport } from './routes/up6/index'
+import { Route as Up5IndexRouteImport } from './routes/up5/index'
+import { Route as Up4IndexRouteImport } from './routes/up4/index'
+import { Route as Up3IndexRouteImport } from './routes/up3/index'
+import { Route as Up2IndexRouteImport } from './routes/up2/index'
+import { Route as Up1IndexRouteImport } from './routes/up1/index'
+import { Route as PresselIndexRouteImport } from './routes/pressel/index'
+import { Route as ObrigadoIndexRouteImport } from './routes/obrigado/index'
+import { Route as FrontIndexRouteImport } from './routes/front/index'
+import { Route as DonateIndexRouteImport } from './routes/donate/index'
+import { Route as ConfirmarSaqueIndexRouteImport } from './routes/confirmar-saque/index'
+import { Route as CheckoutIndexRouteImport } from './routes/checkout/index'
+import { Route as UpsellBackIndexRouteImport } from './routes/upsell/back/index'
+import { Route as ApiPublicCooudCheckoutRouteImport } from './routes/api/public/cooud-checkout'
 
+const ConsultaSaqueRoute = ConsultaSaqueRouteImport.update({
+  id: '/consulta-saque',
+  path: '/consulta-saque',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Up7IndexRoute = Up7IndexRouteImport.update({
+  id: '/up7/',
+  path: '/up7/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Up6IndexRoute = Up6IndexRouteImport.update({
+  id: '/up6/',
+  path: '/up6/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Up5IndexRoute = Up5IndexRouteImport.update({
+  id: '/up5/',
+  path: '/up5/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Up4IndexRoute = Up4IndexRouteImport.update({
+  id: '/up4/',
+  path: '/up4/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Up3IndexRoute = Up3IndexRouteImport.update({
+  id: '/up3/',
+  path: '/up3/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Up2IndexRoute = Up2IndexRouteImport.update({
+  id: '/up2/',
+  path: '/up2/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Up1IndexRoute = Up1IndexRouteImport.update({
+  id: '/up1/',
+  path: '/up1/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PresselIndexRoute = PresselIndexRouteImport.update({
+  id: '/pressel/',
+  path: '/pressel/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ObrigadoIndexRoute = ObrigadoIndexRouteImport.update({
+  id: '/obrigado/',
+  path: '/obrigado/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FrontIndexRoute = FrontIndexRouteImport.update({
+  id: '/front/',
+  path: '/front/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DonateIndexRoute = DonateIndexRouteImport.update({
+  id: '/donate/',
+  path: '/donate/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfirmarSaqueIndexRoute = ConfirmarSaqueIndexRouteImport.update({
+  id: '/confirmar-saque/',
+  path: '/confirmar-saque/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutIndexRoute = CheckoutIndexRouteImport.update({
+  id: '/checkout/',
+  path: '/checkout/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UpsellBackIndexRoute = UpsellBackIndexRouteImport.update({
+  id: '/upsell/back/',
+  path: '/upsell/back/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicCooudCheckoutRoute = ApiPublicCooudCheckoutRouteImport.update({
+  id: '/api/public/cooud-checkout',
+  path: '/api/public/cooud-checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/consulta-saque': typeof ConsultaSaqueRoute
+  '/checkout/': typeof CheckoutIndexRoute
+  '/confirmar-saque/': typeof ConfirmarSaqueIndexRoute
+  '/donate/': typeof DonateIndexRoute
+  '/front/': typeof FrontIndexRoute
+  '/obrigado/': typeof ObrigadoIndexRoute
+  '/pressel/': typeof PresselIndexRoute
+  '/up1/': typeof Up1IndexRoute
+  '/up2/': typeof Up2IndexRoute
+  '/up3/': typeof Up3IndexRoute
+  '/up4/': typeof Up4IndexRoute
+  '/up5/': typeof Up5IndexRoute
+  '/up6/': typeof Up6IndexRoute
+  '/up7/': typeof Up7IndexRoute
+  '/api/public/cooud-checkout': typeof ApiPublicCooudCheckoutRoute
+  '/upsell/back/': typeof UpsellBackIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/consulta-saque': typeof ConsultaSaqueRoute
+  '/checkout': typeof CheckoutIndexRoute
+  '/confirmar-saque': typeof ConfirmarSaqueIndexRoute
+  '/donate': typeof DonateIndexRoute
+  '/front': typeof FrontIndexRoute
+  '/obrigado': typeof ObrigadoIndexRoute
+  '/pressel': typeof PresselIndexRoute
+  '/up1': typeof Up1IndexRoute
+  '/up2': typeof Up2IndexRoute
+  '/up3': typeof Up3IndexRoute
+  '/up4': typeof Up4IndexRoute
+  '/up5': typeof Up5IndexRoute
+  '/up6': typeof Up6IndexRoute
+  '/up7': typeof Up7IndexRoute
+  '/api/public/cooud-checkout': typeof ApiPublicCooudCheckoutRoute
+  '/upsell/back': typeof UpsellBackIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/consulta-saque': typeof ConsultaSaqueRoute
+  '/checkout/': typeof CheckoutIndexRoute
+  '/confirmar-saque/': typeof ConfirmarSaqueIndexRoute
+  '/donate/': typeof DonateIndexRoute
+  '/front/': typeof FrontIndexRoute
+  '/obrigado/': typeof ObrigadoIndexRoute
+  '/pressel/': typeof PresselIndexRoute
+  '/up1/': typeof Up1IndexRoute
+  '/up2/': typeof Up2IndexRoute
+  '/up3/': typeof Up3IndexRoute
+  '/up4/': typeof Up4IndexRoute
+  '/up5/': typeof Up5IndexRoute
+  '/up6/': typeof Up6IndexRoute
+  '/up7/': typeof Up7IndexRoute
+  '/api/public/cooud-checkout': typeof ApiPublicCooudCheckoutRoute
+  '/upsell/back/': typeof UpsellBackIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/consulta-saque'
+    | '/checkout/'
+    | '/confirmar-saque/'
+    | '/donate/'
+    | '/front/'
+    | '/obrigado/'
+    | '/pressel/'
+    | '/up1/'
+    | '/up2/'
+    | '/up3/'
+    | '/up4/'
+    | '/up5/'
+    | '/up6/'
+    | '/up7/'
+    | '/api/public/cooud-checkout'
+    | '/upsell/back/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/consulta-saque'
+    | '/checkout'
+    | '/confirmar-saque'
+    | '/donate'
+    | '/front'
+    | '/obrigado'
+    | '/pressel'
+    | '/up1'
+    | '/up2'
+    | '/up3'
+    | '/up4'
+    | '/up5'
+    | '/up6'
+    | '/up7'
+    | '/api/public/cooud-checkout'
+    | '/upsell/back'
+  id:
+    | '__root__'
+    | '/'
+    | '/consulta-saque'
+    | '/checkout/'
+    | '/confirmar-saque/'
+    | '/donate/'
+    | '/front/'
+    | '/obrigado/'
+    | '/pressel/'
+    | '/up1/'
+    | '/up2/'
+    | '/up3/'
+    | '/up4/'
+    | '/up5/'
+    | '/up6/'
+    | '/up7/'
+    | '/api/public/cooud-checkout'
+    | '/upsell/back/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ConsultaSaqueRoute: typeof ConsultaSaqueRoute
+  CheckoutIndexRoute: typeof CheckoutIndexRoute
+  ConfirmarSaqueIndexRoute: typeof ConfirmarSaqueIndexRoute
+  DonateIndexRoute: typeof DonateIndexRoute
+  FrontIndexRoute: typeof FrontIndexRoute
+  ObrigadoIndexRoute: typeof ObrigadoIndexRoute
+  PresselIndexRoute: typeof PresselIndexRoute
+  Up1IndexRoute: typeof Up1IndexRoute
+  Up2IndexRoute: typeof Up2IndexRoute
+  Up3IndexRoute: typeof Up3IndexRoute
+  Up4IndexRoute: typeof Up4IndexRoute
+  Up5IndexRoute: typeof Up5IndexRoute
+  Up6IndexRoute: typeof Up6IndexRoute
+  Up7IndexRoute: typeof Up7IndexRoute
+  ApiPublicCooudCheckoutRoute: typeof ApiPublicCooudCheckoutRoute
+  UpsellBackIndexRoute: typeof UpsellBackIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/consulta-saque': {
+      id: '/consulta-saque'
+      path: '/consulta-saque'
+      fullPath: '/consulta-saque'
+      preLoaderRoute: typeof ConsultaSaqueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +267,133 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/up7/': {
+      id: '/up7/'
+      path: '/up7'
+      fullPath: '/up7/'
+      preLoaderRoute: typeof Up7IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/up6/': {
+      id: '/up6/'
+      path: '/up6'
+      fullPath: '/up6/'
+      preLoaderRoute: typeof Up6IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/up5/': {
+      id: '/up5/'
+      path: '/up5'
+      fullPath: '/up5/'
+      preLoaderRoute: typeof Up5IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/up4/': {
+      id: '/up4/'
+      path: '/up4'
+      fullPath: '/up4/'
+      preLoaderRoute: typeof Up4IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/up3/': {
+      id: '/up3/'
+      path: '/up3'
+      fullPath: '/up3/'
+      preLoaderRoute: typeof Up3IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/up2/': {
+      id: '/up2/'
+      path: '/up2'
+      fullPath: '/up2/'
+      preLoaderRoute: typeof Up2IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/up1/': {
+      id: '/up1/'
+      path: '/up1'
+      fullPath: '/up1/'
+      preLoaderRoute: typeof Up1IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pressel/': {
+      id: '/pressel/'
+      path: '/pressel'
+      fullPath: '/pressel/'
+      preLoaderRoute: typeof PresselIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/obrigado/': {
+      id: '/obrigado/'
+      path: '/obrigado'
+      fullPath: '/obrigado/'
+      preLoaderRoute: typeof ObrigadoIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/front/': {
+      id: '/front/'
+      path: '/front'
+      fullPath: '/front/'
+      preLoaderRoute: typeof FrontIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/donate/': {
+      id: '/donate/'
+      path: '/donate'
+      fullPath: '/donate/'
+      preLoaderRoute: typeof DonateIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/confirmar-saque/': {
+      id: '/confirmar-saque/'
+      path: '/confirmar-saque'
+      fullPath: '/confirmar-saque/'
+      preLoaderRoute: typeof ConfirmarSaqueIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout/': {
+      id: '/checkout/'
+      path: '/checkout'
+      fullPath: '/checkout/'
+      preLoaderRoute: typeof CheckoutIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/upsell/back/': {
+      id: '/upsell/back/'
+      path: '/upsell/back'
+      fullPath: '/upsell/back/'
+      preLoaderRoute: typeof UpsellBackIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/cooud-checkout': {
+      id: '/api/public/cooud-checkout'
+      path: '/api/public/cooud-checkout'
+      fullPath: '/api/public/cooud-checkout'
+      preLoaderRoute: typeof ApiPublicCooudCheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ConsultaSaqueRoute: ConsultaSaqueRoute,
+  CheckoutIndexRoute: CheckoutIndexRoute,
+  ConfirmarSaqueIndexRoute: ConfirmarSaqueIndexRoute,
+  DonateIndexRoute: DonateIndexRoute,
+  FrontIndexRoute: FrontIndexRoute,
+  ObrigadoIndexRoute: ObrigadoIndexRoute,
+  PresselIndexRoute: PresselIndexRoute,
+  Up1IndexRoute: Up1IndexRoute,
+  Up2IndexRoute: Up2IndexRoute,
+  Up3IndexRoute: Up3IndexRoute,
+  Up4IndexRoute: Up4IndexRoute,
+  Up5IndexRoute: Up5IndexRoute,
+  Up6IndexRoute: Up6IndexRoute,
+  Up7IndexRoute: Up7IndexRoute,
+  ApiPublicCooudCheckoutRoute: ApiPublicCooudCheckoutRoute,
+  UpsellBackIndexRoute: UpsellBackIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
