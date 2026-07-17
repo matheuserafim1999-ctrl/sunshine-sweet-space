@@ -1,0 +1,10 @@
+node_modules
+.git
+.lovable
+dist
+.output
+.wrangler
+src
+supabase
+*.zip
+tiktokpay2026-main*
