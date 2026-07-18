@@ -26,6 +26,22 @@
 
 DirectoryIndex index.php index.html
 
+Options -MultiViews
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Evita /site.php/ cair em fallback/cache antigo; sempre normaliza para o PHP real
+    RewriteRule ^site\.php/.*$ /site.php [R=302,L,NC]
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "^(index|site)\.php$">
+        Header always set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+        Header always set Pragma "no-cache"
+        Header always set Expires "0"
+    </FilesMatch>
+</IfModule>
+
 # Bloqueia acesso direto ao site.php (só via require do cloaker, se configurado)
 # Comente as 3 linhas abaixo se quiser permitir acesso público
 # <Files "site.php">
