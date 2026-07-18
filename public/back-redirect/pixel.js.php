@@ -22,7 +22,7 @@
     a.parentNode.insertBefore(s, a);
   };
 
-  ttq.load("D9DDLDJC77U5KEVKP760");
+  ttq.load("D9DEDNJC77U1ITCMPQV0");
 
   // ── Advanced Matching: ttq.identify ANTES de ttq.page ──
   // Lê email/phone que o tracking.js persistiu em localStorage (key: ptracker_cd)
