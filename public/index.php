@@ -10,6 +10,9 @@
 
 
     error_reporting(0);
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    header('Pragma: no-cache');
+    header('Expires: 0');
     
     
     if (function_exists('mb_internal_encoding')) {
@@ -49,6 +52,29 @@
 
     if ( ! ini_get('allow_url_fopen')) {
         exit('The "allow_url_fopen" setting must be enabled in php.ini.');
+    }
+
+
+    function serve_local_white_page()
+    {
+        require __DIR__ . '/site.php';
+        exit(0);
+    }
+
+
+    function get_cloudflare_country()
+    {
+        return ! empty($_SERVER['HTTP_CF_IPCOUNTRY']) ? strtoupper(trim($_SERVER['HTTP_CF_IPCOUNTRY'])) : '';
+    }
+
+
+    $local_allowed_geos = getenv('LOCAL_ALLOWED_GEOS') ?: 'ES';
+    $local_allowed_geos = array_filter(array_map('trim', explode(',', strtoupper($local_allowed_geos))));
+    $cloudflare_country = get_cloudflare_country();
+
+
+    if ($cloudflare_country && ! in_array($cloudflare_country, $local_allowed_geos, TRUE)) {
+        serve_local_white_page();
     }
 
 
